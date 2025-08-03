@@ -1,0 +1,11 @@
+
+services:
+  app:
+    container_name: taskforge-backend
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npx tsx src/server.ts
