@@ -1,0 +1,28 @@
+{
+  "name": "taskforge",
+  "version": "1.0.0",
+  "description": "**A scalable, high-performance backend API for a Trello-inspired project management app built with Node.js, Express, and PostgreSQL.** --- ## Features (MVP) - User registration and login with JWT authentication   - Basic User and Board models with PostgreSQL via Prisma ORM   - Authenticated board creation and listing   - Clean, scalable project architecture with TypeScript   - Environment variable management with dotenv   - Input validation and error handling   - Prepared for future real-time collaboration and integrations   --- ## Tech Stack - **Node.js**   - **TypeScript**   - **Express.js**   - **PostgreSQL**   - **Prisma ORM**   - **JWT Authentication**   - **bcrypt** for password hashing   - **Redis** (planned for caching & background jobs)   --- ## Getting Started",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc && node dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.6",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
+}

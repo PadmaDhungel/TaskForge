@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,                    /* Create source map files for emitted JavaScript files. */
+    "outDir": "./dist",                   /* Specify an output folder for all emitted files. */
+    "strict": true
+  },
+  "include":["src/**/*"],
+  "exclude":["node_modules"]
+}
