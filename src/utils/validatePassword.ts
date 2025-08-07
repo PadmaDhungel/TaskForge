@@ -1,4 +1,5 @@
-export const validatePassword = (password: string): boolean => {
+export const validatePassword = (password: unknown): boolean => {
+    if (typeof password !== 'string') return false;
     const hasMinLength = password.length >= 8 && password.length <= 64;
     const hasNumber = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
