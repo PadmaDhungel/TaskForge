@@ -25,6 +25,21 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
+  db_test:
+    image: postgres:15
+    container_name: taskforge-db-test
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taskforge_test
+    volumes:
+      - pgdata_test:/var/lib/postgresql/data
 
 volumes:
   pgdata:
+<<<<<<< HEAD
+=======
+  pgdata_test:
+>>>>>>> f986d0c (fix(utils): handle non-string inputs safely in validatePassword and add edge case tests)
