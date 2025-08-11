@@ -6,10 +6,10 @@ beforeEach(async () => {
     await prisma.user.deleteMany(); // Clean DB before each test
 });
 
-describe('POST /auth/register', () => {
+describe('POST /api/v1/auth/register', () => {
     it('should register a new user successfully', async () => {
         const res = await request(app)
-            .post('auth/register')
+            .post('/api/v1/auth/register')
             .send({
                 email: 'testuser@example.com',
                 password: 'strong_Password123',
@@ -29,7 +29,7 @@ describe('POST /auth/register', () => {
             },
         });
 
-        const res = await request(app).post('/auth/register').send({
+        const res = await request(app).post('/api/v1/auth/register').send({
             email: 'test@example.com',
             password: 'Abcd$123',
             name: 'Test User',
@@ -40,7 +40,7 @@ describe('POST /auth/register', () => {
     });
     it('should return 400 if email is missing', async () => {
         const res = await request(app)
-            .post('/auth/register')
+            .post('/api/v1/auth/register')
             .send({
                 password: 'strong_Password123',
                 name: 'Test User',
@@ -48,7 +48,7 @@ describe('POST /auth/register', () => {
         expect(res.statusCode).toBe(400);
     });
     it('rejects invalid email format', async () => {
-        const res = await request(app).post('/auth/register').send({
+        const res = await request(app).post('/api/v1/auth/register').send({
             email: 'not-an-email',
             password: 'Abcd$123',
             name: 'Test User',
@@ -57,7 +57,7 @@ describe('POST /auth/register', () => {
         expect(res.body.error).toMatch(/email/i);
     });
     it('rejects if password is missing', async () => {
-        const res = await request(app).post('/auth/register').send({
+        const res = await request(app).post('/api/v1/auth/register').send({
             email: 'test@example.com',
             name: 'Test User',
         });
@@ -65,7 +65,7 @@ describe('POST /auth/register', () => {
         expect(res.body.error).toMatch(/password/i);
     });
     it('rejects if name is missing', async () => {
-        const res = await request(app).post('/auth/register').send({
+        const res = await request(app).post('/api/v1/auth/register').send({
             email: 'test@example.com',
             password: 'Abcd$123',
         });
@@ -75,20 +75,24 @@ describe('POST /auth/register', () => {
 
 
     it('rejects empty request body', async () => {
-        const res = await request(app).post('/auth/register').send({});
+        const res = await request(app).post('/api/v1/auth/register').send({});
         expect(res.statusCode).toBe(400);
         expect(res.body.error).toMatch(/required/i);
     });
 
     it('rejects extra unexpected fields gracefully', async () => {
-        const res = await request(app).post('/auth/register').send({
+        const res = await request(app).post('/api/v1/auth/register').send({
             email: 'test@example.com',
             password: 'Abcd$123',
             name: 'Test User',
             extraField: 'ignore me',
         });
         expect(res.statusCode).toBe(201);
-        expect(res.body).toHaveProperty('userId');
+        expect(res.body).toHaveProperty('user');
     });
+    afterAll(async () => {
+        await prisma.$disconnect();
+    });
+
 
 })
