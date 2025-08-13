@@ -1,16 +1,12 @@
 import { Request, Response } from 'express';
-import * as authService from '../services/auth.service';
+import { registerUser } from '../services/auth.service';
 import { registerSchema } from '../validators/auth.schemas';
 import { ZodError } from 'zod';
 
 export const register = async (req: Request, res: Response) => {
     try {
         const parsed = registerSchema.parse(req.body);
-        const { user, token } = await authService.registerUser(
-            parsed.email,
-            parsed.password,
-            parsed.name
-        );
+        const { user, token } = await registerUser(parsed);
         return res.status(201).json({ user, token });
     } catch (error) {
         if (error instanceof ZodError) {
