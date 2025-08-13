@@ -1,8 +1,9 @@
 import prisma from '../db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { RegisterInput } from '../validators/auth.schemas';
 
-export const registerUser = async (email: string, password: string, name: string) => {
+export const registerUser = async ({ email, password, name }: RegisterInput) => {
     if (!email || !password || !name) {
         throw { statusCode: 400, message: 'Email, Password and name are required' };
     };
