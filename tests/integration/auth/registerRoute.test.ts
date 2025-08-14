@@ -35,7 +35,7 @@ describe('POST /api/v1/auth/register', () => {
             name: 'Test User',
         });
 
-        expect(res.statusCode).toBe(400);
+        expect(res.statusCode).toBe(409);
         expect(res.body.error).toMatch(/already registered/i);
     });
     it('should return 400 if email is missing', async () => {
@@ -46,6 +46,7 @@ describe('POST /api/v1/auth/register', () => {
                 name: 'Test User',
             });
         expect(res.statusCode).toBe(400);
+        expect(res.body.error).toMatch(/email/i);
     });
     it('rejects invalid email format', async () => {
         const res = await request(app).post('/api/v1/auth/register').send({
@@ -87,8 +88,8 @@ describe('POST /api/v1/auth/register', () => {
             name: 'Test User',
             extraField: 'ignore me',
         });
-        expect(res.statusCode).toBe(201);
-        expect(res.body).toHaveProperty('user');
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toMatch(/unrecognized key/i);
     });
     afterAll(async () => {
         await prisma.$disconnect();
