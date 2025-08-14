@@ -17,6 +17,6 @@ describe('API Routing & Health', () => {
     it('should return 404 for unknown endpoint', async () => {
         const res = await request(app).get('/api/v1/does-not-exist');
         expect(res.statusCode).toBe(404);
-        expect(res.body).toHaveProperty('error', 'Not Found');
+        expect(res.body).toHaveProperty('error', 'NotFound Error');
     });
 });
