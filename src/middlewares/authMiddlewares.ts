@@ -15,7 +15,10 @@ export const authMiddleware = (req: AuthRequest, _res: Response, next: NextFunct
     }
     const token = authHeader.split(' ')[1];
     try {
-        const jwtSecret = process.env.JWT_SECRET || 'verysecret'
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error('Missing JWT_SECRET environment variable');
+        }
         const decoded = jwt.verify(token, jwtSecret);
         if (
             typeof decoded === 'object' &&
