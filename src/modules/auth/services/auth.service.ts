@@ -1,9 +1,9 @@
-import prisma from '../db';
+import prisma from '../../../db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { RegisterInput, LoginInput } from '../validators/auth.schemas';
-import { ConflictError, AuthError } from '../errors';
+import { ConflictError, AuthError } from '../../../errors';
 
 export const registerUser = async ({ email, password, name }: RegisterInput) => {
 
