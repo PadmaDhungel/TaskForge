@@ -2,7 +2,7 @@ import prisma from '../../../db';
 import { CreateBoardInput, UpdateBoardInput } from '../validators/board.schemas';
 
 export const createBoard = async (userId: string, data: CreateBoardInput) => {
-    return await prisma.board.create({
+    return prisma.board.create({
         data: {
             name: data.name,
             description: data.description,
@@ -18,7 +18,7 @@ export const createBoard = async (userId: string, data: CreateBoardInput) => {
 };
 
 export const getBoardsForUser = async (userId: string) => {
-    return await prisma.board.findMany({
+    return prisma.board.findMany({
         where: {
             members: { some: { userId } },
         },
@@ -27,7 +27,7 @@ export const getBoardsForUser = async (userId: string) => {
 };
 
 export const getBoardById = async (boardId: string, userId: string) => {
-    return await prisma.board.findFirst({
+    return prisma.board.findFirst({
         where: {
             id: boardId,
             members: { some: { userId } },
@@ -48,7 +48,7 @@ export const updateBoard = async (
         throw new Error('Not authorized to update this board');
     }
 
-    return await prisma.board.update({
+    return prisma.board.update({
         where: { id: boardId },
         data,
         include: { members: true },
@@ -62,14 +62,8 @@ export const deleteBoard = async (boardId: string, userId: string) => {
     if (!member) {
         throw new Error('Only board owners can delete the board');
     }
-    // Delete all BoardMember records linked to this board
-    await prisma.boardMember.deleteMany({
-        where: { boardId },
-    });
 
-    // Then delete the board itself
-    return await prisma.board.delete({
+    return prisma.board.delete({
         where: { id: boardId },
     });
-
 };
