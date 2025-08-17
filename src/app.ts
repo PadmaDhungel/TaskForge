@@ -1,5 +1,5 @@
 import express from "express";
-import routes from "./routes";
+import routes from "./routes/index";
 
 import { errorHandler } from './middlewares/errorHandler';
 import { NotFoundError } from './errors/index';
