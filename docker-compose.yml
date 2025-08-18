@@ -12,6 +12,7 @@ services:
     depends_on:
       - db
     environment:
+      - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
 
   db:
