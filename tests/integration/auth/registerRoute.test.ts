@@ -1,9 +1,10 @@
 import request from 'supertest';
 import app from '../../../src/app';
 import prisma from '../../../src/db';
+import { cleanDatabase } from '../../helpers/dbCleanup';
 
 beforeEach(async () => {
-    await prisma.user.deleteMany(); // Clean DB before each test
+    await cleanDatabase(); // Clean DB before each test
 });
 
 describe('POST /api/v1/auth/register', () => {

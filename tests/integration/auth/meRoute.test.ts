@@ -3,6 +3,7 @@ import app from '../../../src/app';
 import prisma from '../../../src/db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { cleanDatabase } from '../../helpers/dbCleanup';
 
 describe('GET /api/v1/auth/me ', () => {
     const testUser = {
@@ -14,7 +15,7 @@ describe('GET /api/v1/auth/me ', () => {
     let token: string;
 
     beforeAll(async () => {
-        await prisma.user.deleteMany();
+        await cleanDatabase();
         const hashedPassword = await bcrypt.hash(testUser.password, 10);
         const user = await prisma.user.create({
             data: { email: testUser.email, password: hashedPassword, name: testUser.name },
