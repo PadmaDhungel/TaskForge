@@ -57,7 +57,6 @@ export const deleteBoard = async (req: AuthRequest, res: Response, next: NextFun
     try {
         const { id } = req.params;
         const userId = req.user!.userId;
-
         await boardService.deleteBoard(id, userId);
         res.status(204).send();
     } catch (err) {
