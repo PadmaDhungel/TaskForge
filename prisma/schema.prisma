@@ -26,9 +26,9 @@ model User {
 }
 model BoardMember {
   id      String   @id @default(uuid())
-  board   Board    @relation(fields: [boardId], references: [id])
+  board   Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId String
-  user    User     @relation(fields: [userId], references: [id])
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
   role    String   @default("member")
 
