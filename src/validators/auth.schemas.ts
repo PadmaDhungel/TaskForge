@@ -8,3 +8,5 @@ export const registerSchema = z.object({
     name: z.string({ error: 'name is required' })
         .nonempty({ message: 'Name is required' }),
 }).strip();//.strict works except for that it fails the extra field, os .strip is favoured
+
+export type RegisterInput = z.infer<typeof registerSchema>;
