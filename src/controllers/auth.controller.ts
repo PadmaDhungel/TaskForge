@@ -1,32 +1,25 @@
-import { Request, Response } from 'express';
-import { registerUser } from '../services/auth.service';
-import { registerSchema } from '../validators/auth.schemas';
+import { Request, Response, NextFunction } from 'express';
+import { loginUser, registerUser } from '../services/auth.service';
+import { loginSchema, registerSchema } from '../validators/auth.schemas';
 import { ZodError } from 'zod';
+import { nextTick } from 'process';
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const parsed = registerSchema.parse(req.body);
         const { user, token } = await registerUser(parsed);
         return res.status(201).json({ user, token });
     } catch (error) {
-        if (error instanceof ZodError) {
-            const errorMessages = error.issues
-                .map(issue => `${issue.path.join('.')}: ${issue.message}`)
-                .join(', ');
-
-            return res.status(400).json({ error: errorMessages });
-        }
-
-        const message =
-            typeof error === 'object' && error !== null && 'message' in error
-                ? (error as any).message
-                : 'Unknown error';
-
-        const statusCode =
-            typeof (error as any)?.statusCode === 'number'
-                ? (error as any).statusCode
-                : 500;
-
-        return res.status(statusCode).json({ error: message });
+        return next(error)
     }
 };
+export const login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const parsed = loginSchema.parse(req.body);
+        const { user, token } = await loginUser(parsed)
+        return res.status(200).json({ user, token })
+    }
+    catch (error) {
+        return next(error)
+    }
+}
