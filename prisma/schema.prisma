@@ -21,4 +21,25 @@ model User {
   name String
   role String @default("BASIC")
   createdAt DateTime @default(now())
+  updatedAt  DateTime  @updatedAt
+  memberships BoardMember[]
+}
+model BoardMember {
+  id      String   @id @default(uuid())
+  board   Board    @relation(fields: [boardId], references: [id])
+  boardId String
+  user    User     @relation(fields: [userId], references: [id])
+  userId  String
+  role    String   @default("member")
+
+  @@unique([userId, boardId])
+}
+
+model Board {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  members     BoardMember[]  //references BoardMember
 }

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { loginUser, registerUser } from '../services/auth.service';
 import { loginSchema, registerSchema } from '../validators/auth.schemas';
-import { AuthRequest } from '../middlewares/authMiddlewares';
-import { AuthError, NotFoundError } from '../errors';
-import prisma from '../db';
+import { AuthRequest } from '../../../middlewares/authMiddlewares';
+import { AuthError, NotFoundError } from '../../../errors';
+import prisma from '../../../db';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
     try {
