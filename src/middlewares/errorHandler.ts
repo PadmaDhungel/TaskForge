@@ -22,6 +22,5 @@ export const errorHandler = (
     }
 
     // 3. Fallback → generic server error
-    // console.error('Unhandled error:', err);
     return res.status(500).json({ error: 'Internal Server Error' });
 };

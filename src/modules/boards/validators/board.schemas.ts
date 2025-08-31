@@ -9,7 +9,9 @@ export const updateBoardSchema = z.object({
     name: z.string().min(1, { message: "name can not be empty" }).max(70).optional(),
     description: z.string().max(500).optional()
 }).strict()
-
+    .refine((data) => data.name !== undefined || data.description !== undefined, {
+        message: "At least one field must be provided",
+    });
 // Infer TypeScript types from schemas
 export type CreateBoardInput = z.infer<typeof createBoardSchema>;
 export type UpdateBoardInput = z.infer<typeof updateBoardSchema>;
