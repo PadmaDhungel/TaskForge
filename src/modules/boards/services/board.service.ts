@@ -1,6 +1,6 @@
 import prisma from '../../../db';
 import { CreateBoardInput, UpdateBoardInput } from '../validators/board.schemas';
-
+import { ForbiddenError, NotFoundError } from '../../../errors';
 export const createBoard = async (userId: string, data: CreateBoardInput) => {
     return await prisma.board.create({
         data: {
@@ -27,25 +27,27 @@ export const getBoardsForUser = async (userId: string) => {
 };
 
 export const getBoardById = async (boardId: string, userId: string) => {
-    return await prisma.board.findFirst({
-        where: {
-            id: boardId,
-            members: { some: { userId } },
-        },
+    const board = await prisma.board.findUnique({
+        where: { id: boardId },
         include: { members: true },
-    });
+    })
+    if (!board) {
+        throw new NotFoundError("Board not found")
+    }
+    const isMember = board.members.some(m => m.userId === userId);
+    if (!isMember) {
+        throw new ForbiddenError("You are not a member of this board");
+    }
+    return board;
 };
 
-export const updateBoard = async (
-    boardId: string,
-    userId: string,
-    data: UpdateBoardInput
+export const updateBoard = async (boardId: string, userId: string, data: UpdateBoardInput
 ) => {
     const member = await prisma.boardMember.findFirst({
         where: { boardId, userId },
     });
     if (!member) {
-        throw new Error('Not authorized to update this board');
+        throw new ForbiddenError('Not authorized to update this board');
     }
 
     return await prisma.board.update({
@@ -56,11 +58,20 @@ export const updateBoard = async (
 };
 
 export const deleteBoard = async (boardId: string, userId: string) => {
+    const board = await prisma.board.findUnique({
+        where: { id: boardId },
+        include: { members: true },
+    });
+
+    if (!board) {
+        throw new NotFoundError("Board not found");
+    }
+
     const member = await prisma.boardMember.findFirst({
         where: { boardId, userId, role: 'owner' },
     });
     if (!member) {
-        throw new Error('Only board owners can delete the board');
+        throw new ForbiddenError('Only board owners can delete the board');
     }
     // Delete all BoardMember records linked to this board
     await prisma.boardMember.deleteMany({

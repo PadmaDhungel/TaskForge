@@ -46,3 +46,14 @@ export class ServiceUnavailableError extends AppError {
         super(message, 503);
     }
 }
+export class ForbiddenError extends AppError {
+    constructor(message = "Forbidden") {
+        super(message, 403);
+    }
+}
+
+export class UnauthorizedError extends AppError {
+    constructor(message = "Unauthorized") {
+        super(message, 401);
+    }
+}
