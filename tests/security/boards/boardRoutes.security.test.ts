@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../../../src/app";
-import prisma from "../../../src/db";
+import prisma, { BoardRole } from "../../../src/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cleanDatabase } from "../../helpers/dbCleanup";
@@ -53,7 +53,7 @@ describe("Board Routes - Security", () => {
         const memberToken = jwt.sign({ userId: member.id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
 
         const board = await prisma.board.create({ data: { name: "Owned Board" } });
-        await prisma.boardMember.create({ data: { boardId: board.id, userId: member.id, role: "member" } });
+        await prisma.boardMember.create({ data: { boardId: board.id, userId: member.id, role: BoardRole.MEMBER } });
 
         const res = await request(app)
             .delete(`/api/v1/boards/${board.id}`)
@@ -64,7 +64,7 @@ describe("Board Routes - Security", () => {
 
     it("should return 404 when deleting an already deleted board", async () => {
         const board = await prisma.board.create({ data: { name: "Temp Board" } });
-        await prisma.boardMember.create({ data: { boardId: board.id, userId, role: "owner" } });
+        await prisma.boardMember.create({ data: { boardId: board.id, userId, role: BoardRole.OWNER } });
 
         await request(app).delete(`/api/v1/boards/${board.id}`).set("Authorization", `Bearer ${token}`);
         const res = await request(app).delete(`/api/v1/boards/${board.id}`).set("Authorization", `Bearer ${token}`);

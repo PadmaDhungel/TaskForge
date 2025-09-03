@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../../../src/app";
-import prisma from "../../../src/db";
+import prisma, { BoardRole } from "../../../src/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cleanDatabase } from "../../helpers/dbCleanup";
@@ -31,7 +31,7 @@ describe("Board Routes - Validation", () => {
 
     it("should return 400 if PATCH has no valid fields", async () => {
         const board = await prisma.board.create({ data: { name: "Patch Test" } });
-        await prisma.boardMember.create({ data: { boardId: board.id, userId, role: "owner" } });
+        await prisma.boardMember.create({ data: { boardId: board.id, userId, role: BoardRole.OWNER } });
 
         const res = await request(app)
             .patch(`/api/v1/boards/${board.id}`)

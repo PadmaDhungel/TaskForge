@@ -1,4 +1,4 @@
-import prisma from '../../../db';
+import prisma, { BoardRole } from '../../../db';
 import { CreateBoardInput, UpdateBoardInput } from '../validators/board.schemas';
 import { ForbiddenError, NotFoundError } from '../../../errors';
 export const createBoard = async (userId: string, data: CreateBoardInput) => {
@@ -9,7 +9,7 @@ export const createBoard = async (userId: string, data: CreateBoardInput) => {
             members: {
                 create: {
                     userId,
-                    role: 'owner', // default owner
+                    role: BoardRole.MEMBER,
                 },
             },
         },
@@ -68,7 +68,7 @@ export const deleteBoard = async (boardId: string, userId: string) => {
     }
 
     const member = await prisma.boardMember.findFirst({
-        where: { boardId, userId, role: 'owner' },
+        where: { boardId, userId, role: BoardRole.OWNER },
     });
     if (!member) {
         throw new ForbiddenError('Only board owners can delete the board');

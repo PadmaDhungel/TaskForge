@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../../../src/app";
-import prisma from "../../../src/db";
+import prisma, { BoardRole } from "../../../src/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cleanDatabase } from "../../helpers/dbCleanup";
@@ -48,7 +48,7 @@ describe("Board Routes", () => {
     describe("GET /api/v1/boards", () => {
         it("should list boards for the user", async () => {
             const board = await prisma.board.create({ data: { name: "User's Board" } });
-            await prisma.boardMember.create({ data: { boardId: board.id, userId, role: "owner" } });
+            await prisma.boardMember.create({ data: { boardId: board.id, userId, role: BoardRole.OWNER } });
 
             const res = await request(app)
                 .get("/api/v1/boards")
@@ -63,7 +63,7 @@ describe("Board Routes", () => {
     describe("GET /api/v1/boards/:id", () => {
         it("should return board details", async () => {
             const board = await prisma.board.create({ data: { name: "Board Details", description: "Detail test" } });
-            await prisma.boardMember.create({ data: { boardId: board.id, userId, role: "owner" } });
+            await prisma.boardMember.create({ data: { boardId: board.id, userId, role: BoardRole.OWNER } });
 
             const res = await request(app)
                 .get(`/api/v1/boards/${board.id}`)
@@ -86,7 +86,7 @@ describe("Board Routes", () => {
     describe("PATCH /api/v1/boards/:id", () => {
         it("should update board details", async () => {
             const board = await prisma.board.create({ data: { name: "Old Name" } });
-            await prisma.boardMember.create({ data: { boardId: board.id, userId, role: "owner" } });
+            await prisma.boardMember.create({ data: { boardId: board.id, userId, role: BoardRole.OWNER } });
 
             const res = await request(app)
                 .patch(`/api/v1/boards/${board.id}`)
@@ -100,8 +100,17 @@ describe("Board Routes", () => {
 
     describe("DELETE /api/v1/boards/:id", () => {
         it("should delete board", async () => {
-            const board = await prisma.board.create({ data: { name: "Delete Me" } });
-            await prisma.boardMember.create({ data: { boardId: board.id, userId, role: "owner" } });
+            const board = await prisma.board.create({
+                data: {
+                    name: "Delete Me",
+                    members: {
+                        create: {
+                            userId,
+                            role: BoardRole.OWNER
+                        }
+                    }
+                }
+            });
 
             const res = await request(app)
                 .delete(`/api/v1/boards/${board.id}`)

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, BoardRole } from '@prisma/client';
 import dotenv from 'dotenv'
 
 if (process.env.NODE_ENV === 'test') {
@@ -9,5 +9,5 @@ if (process.env.NODE_ENV === 'test') {
 const prisma = new PrismaClient({
     datasources: { db: { url: process.env.DATABASE_URL } },
 });
-
-export default prisma;
+export default prisma
+export { BoardRole };
